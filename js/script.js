@@ -1,172 +1,171 @@
 'use strict';
 
 document.addEventListener('DOMContentLoaded', () => {
-    const tabs = document.querySelectorAll('.tabheader__item'),
-          tabsContent = document.querySelectorAll('.tabcontent'),
-          tabsParent = document.querySelector('.tabheader__items');
+	const tabs = document.querySelectorAll('.tabheader__item'),
+		tabsContent = document.querySelectorAll('.tabcontent'),
+		tabsParent = document.querySelector('.tabheader__items');
 
 
-    function hideTabContent() {
-        tabsContent.forEach(item => {
-            item.classList.add('hide');
-            item.classList.remove('show', 'fade');
-        });
+	function hideTabContent() {
+		tabsContent.forEach(item => {
+			item.classList.add('hide');
+			item.classList.remove('show', 'fade');
+		});
 
-        tabs.forEach(item => {
-            item.classList.remove('tabheader__item_active');
-        });
-    }
+		tabs.forEach(item => {
+			item.classList.remove('tabheader__item_active');
+		});
+	}
 
-    function showTabContent(tab = 0) {
-        tabsContent[tab].classList.add('show', 'fade');
-        tabsContent[tab].classList.remove('hide');
-        tabs[tab].classList.add('tabheader__item_active');
-    }
+	function showTabContent(tab = 0) {
+		tabsContent[tab].classList.add('show', 'fade');
+		tabsContent[tab].classList.remove('hide');
+		tabs[tab].classList.add('tabheader__item_active');
+	}
 
-    hideTabContent();
-    showTabContent();
+	hideTabContent();
+	showTabContent();
 
-    tabsParent.addEventListener('click', (e) => {
-        const target = e.target;
+	tabsParent.addEventListener('click', (e) => {
+		const target = e.target;
         
-        if (target && target.classList.contains('tabheader__item')) {
-            tabs.forEach((item, i) => {
-                if (target == item) {
-                    hideTabContent();
-                    showTabContent(i);
-                }
-            });
-        }
-    });
+		if (target && target.classList.contains('tabheader__item')) {
+			tabs.forEach((item, i) => {
+				if (target == item) {
+					hideTabContent();
+					showTabContent(i);
+				}
+			});
+		}
+	});
 
-    // Timer
+	// Timer
 
-    const deadline = '2024-06-11';
+	const deadline = '2024-06-11';
 
-    function getTimeRemaining(endtime) {
-        const t = Date.parse(endtime) - Date.parse(new Date());
-        let days, hours, minutes, seconds;
+	function getTimeRemaining(endtime) {
+		const t = Date.parse(endtime) - Date.parse(new Date());
+		let days, hours, minutes, seconds;
 
-        if (t <= 0) {
-            days = 0,
-            hours = 0,
-            minutes = 0,
-            seconds = 0;
-        } else {
-            days = Math.floor(t / (1000 * 60 * 60 * 24)),
-            hours = Math.floor((t / (1000 * 60 * 60)) % 24),
-            minutes = Math.floor((t / (1000 * 60) % 60)),
-            seconds = Math.floor((t / 1000) % 60);
-        }
+		if (t <= 0) {
+			days = 0,
+			hours = 0,
+			minutes = 0,
+			seconds = 0;
+		} else {
+			days = Math.floor(t / (1000 * 60 * 60 * 24)),
+			hours = Math.floor((t / (1000 * 60 * 60)) % 24),
+			minutes = Math.floor((t / (1000 * 60) % 60)),
+			seconds = Math.floor((t / 1000) % 60);
+		}
         
-        return {
-            'total': t,
-            'days': days,
-            'hours': hours,
-            'minutes': minutes,
-            'seconds': seconds
-        };
-    }
+		return {
+			'total': t,
+			'days': days,
+			'hours': hours,
+			'minutes': minutes,
+			'seconds': seconds
+		};
+	}
 
-    function setClock(selector, endtime) {
-        const timer = document.querySelector(selector),
-              days = timer.querySelector('#days'),
-              hours = timer.querySelector('#hours'),
-              minutes = timer.querySelector('#minutes'),
-              seconds = timer.querySelector('#seconds'),
-              timeInterval = setInterval(updateClock, 1000);
-
-
-        updateClock();
-
-        function updateClock() {
-            const t = getTimeRemaining(endtime);
-
-            days.innerHTML = getZero(t.days);
-            hours.innerHTML = getZero(t.hours);
-            minutes.innerHTML = getZero(t.minutes);
-            seconds.innerHTML = getZero(t.seconds);
-
-            if (t.total <= 0) {
-                clearInterval(timeInterval);
-            }
-        }
-    }
-
-    function getZero(num) {
-        return num < 10 && num >= 0 ? '0' + num : num;
-    }
-
-    setClock('.timer', deadline);
-
-    // Modal
-
-    const modal = document.querySelector('.modal'),
-          modalTrigger = document.querySelectorAll('[data-modal]'),
-          modalCloseBtn = document.querySelector('.modal__close');
+	function setClock(selector, endtime) {
+		const timer = document.querySelector(selector),
+			days = timer.querySelector('#days'),
+			hours = timer.querySelector('#hours'),
+			minutes = timer.querySelector('#minutes'),
+			seconds = timer.querySelector('#seconds'),
+			timeInterval = setInterval(updateClock, 1000);
 
 
-    function openModal() {
-        modal.classList.toggle('show');
-        document.body.style.overflow = 'hidden';
-        clearInterval(modalTimerId);
-    }
+		updateClock();
+
+		function updateClock() {
+			const t = getTimeRemaining(endtime);
+
+			days.innerHTML = getZero(t.days);
+			hours.innerHTML = getZero(t.hours);
+			minutes.innerHTML = getZero(t.minutes);
+			seconds.innerHTML = getZero(t.seconds);
+
+			if (t.total <= 0) {
+				clearInterval(timeInterval);
+			}
+		}
+	}
+
+	function getZero(num) {
+		return num < 10 && num >= 0 ? '0' + num : num;
+	}
+
+	setClock('.timer', deadline);
+
+	// Modal
+
+	const modal = document.querySelector('.modal'),
+		modalTrigger = document.querySelectorAll('[data-modal]');
+
+	function openModal() {
+		modal.classList.add('show');
+		modal.classList.remove('hide');
+		document.body.style.overflow = 'hidden';
+		clearInterval(modalTimerId);
+	}
     
-    modalTrigger.forEach(btn => {
-        btn.addEventListener('click', openModal);
-    });
+	modalTrigger.forEach(btn => {
+		btn.addEventListener('click', openModal);
+	});
 
-    function closeModal() {
-        modal.classList.toggle('show');
-        document.body.style.overflow = '';
-    }
+	function closeModal() {
+		modal.classList.toggle('show');
+		document.body.style.overflow = '';
+	}
 
-    modalCloseBtn.addEventListener('click', closeModal);
+	modal.addEventListener('click', e => {
+		if (e.target === modal || e.target.hasAttribute('data-close') || e.target.classList.contains('modal__close')) {
+			closeModal();
+		}
+	});
 
-    modal.addEventListener('click', e => {
-        if (e.target === modal) {
-            closeModal();
-        }
-    });
+	document.addEventListener('keydown', e => {
+		if (e.code === 'Escape' && modal.classList.contains('show')) {
+			closeModal();
+		}
+	});
 
-    document.addEventListener('keydown', e => {
-        if (e.code === 'Escape' && modal.classList.contains('show')) {
-            closeModal();
-        }
-    });
+	const modalTimerId = setTimeout(openModal, 50000);
 
-    const modalTimerId = setTimeout(openModal, 5000);
+	function showModalByScroll() {
+		if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
+			openModal();
+			window.removeEventListener('scroll', showModalByScroll);
+		}
+	}
 
-    function showModalByScroll() {
-        openModal();
-        window.removeEventListener('scrollend', showModalByScroll)
-    }
+	window.addEventListener('scroll', showModalByScroll);
 
-    window.addEventListener('scrollend', showModalByScroll);
+	// Use class to create cards
 
-    // Use class to create cards
+	class MenuCard {
+		constructor(src, alt, title, description, price, parentSelector, ...classes) {
+			this.src = src;
+			this.alt = alt;
+			this.title = title;
+			this.description = description;
+			this.price = price;
+			this.classes = classes.length ===  0 ? ['menu__item'] : classes;
+			this.parent = document.querySelector(parentSelector);
+			this.transfer = 27;
+			this.changeToUAH();
+		}
 
-    class MenuCard {
-        constructor(src, alt, title, description, price, parentSelector, ...classes) {
-            this.src = src;
-            this.alt = alt;
-            this.title = title;
-            this.description = description;
-            this.price = price;
-            this.classes = classes.length ===  0 ? ['menu__item'] : classes;
-            this.parent = document.querySelector(parentSelector);
-            this.transfer = 27;
-            this.changeToUAH();
-        }
+		changeToUAH() {
+			this.price = this.price * this.transfer;
+		}
 
-        changeToUAH() {
-            this.price = this.price * this.transfer;
-        }
-
-        render() {
-            const element = document.createElement('div');
-            this.classes.forEach(className => element.classList.add(className));
-            element.innerHTML = `
+		render() {
+			const element = document.createElement('div');
+			this.classes.forEach(className => element.classList.add(className));
+			element.innerHTML = `
                 <img src=${this.src} alt=${this.alt}>
                 <h3 class="menu__item-subtitle">${this.title}</h3>
                 <div class="menu__item-descr">${this.description}</div>
@@ -177,36 +176,114 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
                 `;
             
-            this.parent.append(element);
-        }
-    }
+			this.parent.append(element);
+		}
+	}
 
-    new MenuCard(
-        'img/tabs/vegy.jpg',
-        'vegy',
-        'Меню "Фитнес"',
-        'Меню "Фитнес" - это новый подход к приготовлению блюд: больше свежих овощей и фруктов. Продукт активных и здоровых людей. Это абсолютно новый продукт с оптимальной ценой и высоким качеством!',
-        9,
-        '.menu .container'
-    ).render();
+	new MenuCard(
+		'img/tabs/vegy.jpg',
+		'vegy',
+		'Меню "Фитнес"',
+		'Меню "Фитнес" - это новый подход к приготовлению блюд: больше свежих овощей и фруктов. Продукт активных и здоровых людей. Это абсолютно новый продукт с оптимальной ценой и высоким качеством!',
+		9,
+		'.menu .container'
+	).render();
 
-    new MenuCard(
-        'img/tabs/post.jpg',
-        'post',
-        'Меню "Постное"',
-        'Меню “Постное” - это тщательный подбор ингредиентов: полное отсутствие продуктов животного происхождения, молоко из миндаля, овса, кокоса или гречки, правильное количество белков за счет тофу и импортных вегетарианских стейков.',
-        12,
-        '.menu .container',
-        'menu__item'
-    ).render();
+	new MenuCard(
+		'img/tabs/post.jpg',
+		'post',
+		'Меню "Постное"',
+		'Меню “Постное” - это тщательный подбор ингредиентов: полное отсутствие продуктов животного происхождения, молоко из миндаля, овса, кокоса или гречки, правильное количество белков за счет тофу и импортных вегетарианских стейков.',
+		12,
+		'.menu .container',
+		'menu__item'
+	).render();
 
-    new MenuCard(
-        "img/tabs/elite.jpg",
-        "elite",
-        'Меню “Премиум”',
-        'В меню “Премиум” мы используем не только красивый дизайн упаковки, но и качественное исполнение блюд. Красная рыба, морепродукты, фрукты - ресторанное меню без похода в ресторан!',
-        21,
-        ".menu .container",
-        'menu__item'
-    ).render();
+	new MenuCard(
+		'img/tabs/elite.jpg',
+		'elite',
+		'Меню “Премиум”',
+		'В меню “Премиум” мы используем не только красивый дизайн упаковки, но и качественное исполнение блюд. Красная рыба, морепродукты, фрукты - ресторанное меню без похода в ресторан!',
+		21,
+		'.menu .container',
+		'menu__item'
+	).render();
+
+	// Forms
+
+	const forms = document.querySelectorAll('form');
+
+	const message = {
+		loading: 'img/form/spinner.svg',
+		success: 'ty! see you later',
+		failure: 'smth went wrong'
+	};
+
+	forms.forEach(item => {
+		postData(item);
+	});
+
+	function postData(form) {
+		form.addEventListener('submit', (e) => {
+			e.preventDefault();
+
+			const statusMsg = document.createElement('img');
+			statusMsg.src = message.loading;
+			statusMsg.style.cssText = `
+				display: block;
+				margin: 0 auto;
+			`;
+			// form.append(statusMsg);
+			form.insertAdjacentElement('afterend', statusMsg);
+
+			const request = new XMLHttpRequest();
+			request.open('POST', 'server.php');
+			request.setRequestHeader('Content-type', 'application/json');
+			const formData = new FormData(form);
+
+			const object = {};
+			formData.forEach(function(value, key) {
+				object[key] = value;
+			});
+
+			const json = JSON.stringify(object);
+
+			request.send(json);
+
+			request.addEventListener('load', () => {
+				if (request.status === 200) {
+					console.log(request.response);
+					showThanksModal(message.success);
+					form.reset();
+					statusMsg.remove();
+				} else {
+					showThanksModal(message.failure);
+				}
+			});
+		});
+	}
+
+	function showThanksModal(message) {
+		const prevModalDialog = document.querySelector('.modal__dialog');
+        
+		prevModalDialog.classList.add('hide');
+		openModal();
+
+		const thanksModal = document.createElement('div');
+		thanksModal.classList.add('modal__dialog');
+		thanksModal.innerHTML = `
+            <div class="modal__content">
+                <div class="modal__close" data-close>×</div>
+                <div class="modal__title">${message}</div>
+            </div>
+        `;
+
+		document.querySelector('.modal').append(thanksModal);
+		setTimeout(() => {
+			thanksModal.remove();
+			prevModalDialog.classList.add('show');
+			prevModalDialog.classList.remove('hide');
+			closeModal();
+		}, 4000);
+	}
 });
