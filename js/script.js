@@ -1,20 +1,29 @@
-/* eslint-disable no-mixed-spaces-and-tabs */
-'use strict';
+import calc from './modules/calc';
+import cards from './modules/cards';
+import forms from './modules/forms';
+import modal from './modules/modal';
+import slider from './modules/slider';
+import tabs from './modules/tabs';
+import timer from './modules/timer';
+import { openModal } from './modules/modal';
 
 document.addEventListener('DOMContentLoaded', () => {
-	const calc = module.require('./modules/calc'),
-		  cards = module.require('./modules/cards'),
-		  forms = module.require('./modules/forms'),
-		  modal = module.require('./modules/modal'),
-		  slider = module.require('./modules/slider'),
-		  tabs = module.require('./modules/tabs'),
-		  timer = module.require('./modules/timer');
+	const modalTimerId = setTimeout(() => openModal('.modal', modalTimerId), 50000);
 
-	tabs();
-	modal();
-	timer();
+	tabs('.tabheader__item', '.tabcontent', '.tabheader__items', 'tabheader__item_active');
+	modal('[data-modal]', '.modal', modalTimerId);
+	timer('.timer', '2024-06-11');
 	cards();
 	calc();
-	forms();
-	slider();
+	forms(modalTimerId, 'form');
+	slider({
+		container: '.offer__slider',
+		nextArrow: '.offer__slider-next',
+		prevArrow: '.offer__slider-prev',
+		totalCounter: '#total',
+		currentCounter: '#current',
+		wrapper: '.offer__slider-wrapper',
+		slide: '.offer__slide',
+		field: '.offer__slider-inner'
+	});
 });
