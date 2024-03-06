@@ -1,99 +1,29 @@
+import calc from './modules/calc';
+import cards from './modules/cards';
+import forms from './modules/forms';
+import modal from './modules/modal';
+import slider from './modules/slider';
+import tabs from './modules/tabs';
+import timer from './modules/timer';
+import { openModal } from './modules/modal';
+
 document.addEventListener('DOMContentLoaded', () => {
-    const tabs = document.querySelectorAll('.tabheader__item'),
-          tabsContent = document.querySelectorAll('.tabcontent'),
-          tabsParent = document.querySelector('.tabheader__items');
+	const modalTimerId = setTimeout(() => openModal('.modal', modalTimerId), 50000);
 
-
-    function hideTabContent() {
-        tabsContent.forEach(item => {
-            item.classList.add('hide');
-            item.classList.remove('show', 'fade');
-        });
-
-        tabs.forEach(item => {
-            item.classList.remove('tabheader__item_active');
-        });
-    }
-
-    function showTabContent(tab = 0) {
-        tabsContent[tab].classList.add('show', 'fade');
-        tabsContent[tab].classList.remove('hide');
-        tabs[tab].classList.add('tabheader__item_active');
-    }
-
-    hideTabContent();
-    showTabContent();
-
-    tabsParent.addEventListener('click', (e) => {
-        const target = e.target;
-        
-        if (target && target.classList.contains('tabheader__item')) {
-            tabs.forEach((item, i) => {
-                if (target == item) {
-                    hideTabContent();
-                    showTabContent(i);
-                }
-            });
-        }
-    });
-
-    // Timer
-
-    const deadline = '2024-06-11';
-
-    function getTimeRemaining(endtime) {
-        const t = Date.parse(endtime) - Date.parse(new Date());
-        let days, hours, minutes, seconds;
-
-        if (t <= 0) {
-            days = 0,
-            hours = 0,
-            minutes = 0,
-            seconds = 0;
-        } else {
-            days = Math.floor(t / (1000 * 60 * 60 * 24)),
-            hours = Math.floor((t / (1000 * 60 * 60)) % 24),
-            minutes = Math.floor((t / (1000 * 60) % 60)),
-            seconds = Math.floor((t / 1000) % 60);
-        }
-        
-        return {
-            'total': t,
-            'days': days,
-            'hours': hours,
-            'minutes': minutes,
-            'seconds': seconds
-        };
-    }
-
-    function setClock(selector, endtime) {
-        const timer = document.querySelector(selector),
-              days = timer.querySelector('#days'),
-              hours = timer.querySelector('#hours'),
-              minutes = timer.querySelector('#minutes'),
-              seconds = timer.querySelector('#seconds'),
-              timeInterval = setInterval(updateClock, 1000);
-
-
-        updateClock();
-
-        function updateClock() {
-            const t = getTimeRemaining(endtime);
-
-            days.innerHTML = getZero(t.days);
-            hours.innerHTML = getZero(t.hours);
-            minutes.innerHTML = getZero(t.minutes);
-            seconds.innerHTML = getZero(t.seconds);
-
-            if (t.total <= 0) {
-                clearInterval(timeInterval);
-            }
-        }
-    }
-
-    function getZero(num) {
-        return num < 10 && num >= 0 ? '0' + num : num;
-    }
-
-    setClock('.timer', deadline);
+	tabs('.tabheader__item', '.tabcontent', '.tabheader__items', 'tabheader__item_active');
+	modal('[data-modal]', '.modal', modalTimerId);
+	timer('.timer', '2024-06-11');
+	cards();
+	calc();
+	forms(modalTimerId, 'form');
+	slider({
+		container: '.offer__slider',
+		nextArrow: '.offer__slider-next',
+		prevArrow: '.offer__slider-prev',
+		totalCounter: '#total',
+		currentCounter: '#current',
+		wrapper: '.offer__slider-wrapper',
+		slide: '.offer__slide',
+		field: '.offer__slider-inner'
+	});
 });
